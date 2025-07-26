@@ -11,7 +11,7 @@ categorical_model = "categorical_allowed_values.json"
 with open(categorical_model, 'r', encoding='utf-8') as f:
     categorias = json.load(f)
 
-st.title("🌐 Sistema Web de Predicción de Hipertensión")
+st.title("🌐 Sistema Web de Predicción de Hipertensión :)")
 
 # Navbar lateral simple
 menu = st.sidebar.radio("Navegación", ["Inicio", "Formulario", "Métricas"])
@@ -90,9 +90,9 @@ elif menu == "Formulario":
                 "Employment_Status": Employment_Status
             }
 
-            url_api = "https://stalind-static.hf.space/predecir"  # Cambiar si no usas Docker
-
+            url_api = "https://stalind-static.hf.space/predecir" 
             response = requests.post(url_api, json=input_data)
+            
             result = response.json()
 
             if "Hypertension_Prediction" in result:
