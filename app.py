@@ -92,19 +92,26 @@ elif menu == "Formulario":
 
             url_api = "https://stalind-static.hf.space/predecir" 
             response = requests.post(url_api, json=input_data)
-            
-            result = response.json()
 
-            if "Hypertension_Prediction" in result:
-                pred = result["Hypertension_Prediction"]
-                proba = result.get("Probability", None)
-                if pred == "High":
-                    st.error(f"⚠️ Riesgo de Hipertensión detectado. Probabilidad: {proba}")
+            if response.status_code == 200:
+                result = response.json()
+                
+                pred = result.get("Hypertension_Prediction")
+                proba = result.get("Probability")
+                threshold = result.get("Threshold")
+
+                if pred is not None and proba is not None and threshold is not None:
+                    # Lógica basada en la probabilidad y el threshold
+                    if proba >= threshold:
+                        # Riesgo alto
+                        st.error(f"⚠️ Riesgo de Hipertensión detectado.\nProbabilidad: {proba:.2f} (umbral {threshold})")
+                    else:
+                        # Riesgo bajo
+                        st.success(f"✅ No se detecta hipertensión.\nProbabilidad: {proba:.2f} (umbral {threshold})")
                 else:
-                    st.success(f"✅ No se detecta hipertensión. Probabilidad: {proba}")
+                    st.error(f"⚠️ Respuesta incompleta de la API: {result}")
             else:
-                st.error(f"Error: {result.get('error', 'Respuesta inesperada')}")
-
+                st.error(f"❌ Error en la solicitud: {response.status_code}")
         except Exception as e:
             st.error(f"Error al procesar la predicción: {str(e)}")
 
